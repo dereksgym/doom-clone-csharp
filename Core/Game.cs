@@ -18,12 +18,12 @@ public class Game : IDisposable
     private float _deltaTime = 0;
     private bool _showMinimap = true;
 
-    private ulong _lastFrameTime;
+    private uint _lastFrameTime;
     private ulong _frameCount;
 
     public Game(int screenWidth, int screenHeight)
     {
-        SDL.SDL_Init(SDL.SDL_INIT_VIDEO | SDL.SDL_INIT_EVENTS);
+        SDL.SDL_Init(SDL.SDL_INIT_VIDEO);
 
         _window = SDL.SDL_CreateWindow(
             "Doom Clone - C#",
@@ -40,7 +40,7 @@ public class Game : IDisposable
         _renderer = SDL.SDL_CreateRenderer(
             _window,
             -1,
-            SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED | SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC
+            (uint)(SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED | SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC)
         );
 
         if (_renderer == IntPtr.Zero)
@@ -57,7 +57,7 @@ public class Game : IDisposable
         _world.AddEntity(new Entity.Enemy(new Vector3(18, 0, 18)));
         _world.AddEntity(new Entity.Enemy(new Vector3(12, 0, 18)));
 
-        _lastFrameTime = SDL.SDL_GetTicks64();
+        _lastFrameTime = SDL.SDL_GetTicks();
         _frameCount = 0;
     }
 
@@ -73,7 +73,7 @@ public class Game : IDisposable
     private void Update()
     {
         // Calculate delta time
-        ulong currentTime = SDL.SDL_GetTicks64();
+        uint currentTime = SDL.SDL_GetTicks();
         _deltaTime = Math.Min((float)(currentTime - _lastFrameTime) / 1000f, 0.05f);  // Cap at 50ms
         _lastFrameTime = currentTime;
 

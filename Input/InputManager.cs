@@ -14,10 +14,11 @@ public class InputManager
     private int _prevMouseX;
     private int _prevMouseY;
     private bool _mouseGrabbed = false;
+    private const int KEYBOARD_STATE_SIZE = 512;  // SDL2 keyboard state array size
 
     public InputManager()
     {
-        _keyboardState = new byte[SDL.SDL_NUM_SCANCODES];
+        _keyboardState = new byte[KEYBOARD_STATE_SIZE];
         _mouseX = 0;
         _mouseY = 0;
         _prevMouseX = 0;
@@ -32,7 +33,7 @@ public class InputManager
         SDL.SDL_PumpEvents();
         
         IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out _);
-        Marshal.Copy(keyboardStatePtr, _keyboardState, 0, SDL.SDL_NUM_SCANCODES);
+        Marshal.Copy(keyboardStatePtr, _keyboardState, 0, KEYBOARD_STATE_SIZE);
 
         SDL.SDL_GetMouseState(out _mouseX, out _mouseY);
 
@@ -52,7 +53,10 @@ public class InputManager
 
     public bool IsKeyPressed(SDL.SDL_Scancode key)
     {
-        return _keyboardState[(int)key] != 0;
+        int keyCode = (int)key;
+        if (keyCode < 0 || keyCode >= KEYBOARD_STATE_SIZE)
+            return false;
+        return _keyboardState[keyCode] != 0;
     }
 
     public Vector3 GetMouseDelta()
