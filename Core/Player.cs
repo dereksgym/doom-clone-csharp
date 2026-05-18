@@ -1,5 +1,6 @@
 namespace DoomClone.Core;
 
+using DoomClone.Input;
 using DoomClone.Utilities;
 using System;
 
