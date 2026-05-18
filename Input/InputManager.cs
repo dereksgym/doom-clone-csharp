@@ -4,10 +4,11 @@ using DoomClone.Utilities;
 using SDL2;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 public class InputManager
 {
-    private Span<byte> _keyboardState;
+    private byte[] _keyboardState;
     private int _mouseX;
     private int _mouseY;
     private int _prevMouseX;
@@ -31,7 +32,7 @@ public class InputManager
         SDL.SDL_PumpEvents();
         
         IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out _);
-        System.Runtime.InteropServices.Marshal.Copy(keyboardStatePtr, _keyboardState.ToArray(), 0, SDL.SDL_NUM_SCANCODES);
+        Marshal.Copy(keyboardStatePtr, _keyboardState, 0, SDL.SDL_NUM_SCANCODES);
 
         SDL.SDL_GetMouseState(out _mouseX, out _mouseY);
 
